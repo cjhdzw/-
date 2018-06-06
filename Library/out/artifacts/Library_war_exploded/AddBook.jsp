@@ -73,7 +73,7 @@
         %>
         <div align="center">
             <h3>添加书籍成功</h3>
-            <table width="400" border="0" cellspacing="0" cellpadding="0">
+            <table width="400" border="1" cellspacing="0" cellpadding="0">
                 <tr>
                     <td>
                         <h3>书名</h3>

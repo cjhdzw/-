@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 
 public class ManageUpdate extends HttpServlet {
     @Override
@@ -24,35 +25,39 @@ public class ManageUpdate extends HttpServlet {
         String password1 = req.getParameter("password1");
         String password2 = req.getParameter("password2");
 
-        if (connectMysql.selectManage(username, password) == 1) {
-            if(!password1.equals(password2)){
+        try {
+            if (connectMysql.selectManage(username, connectMysql.MD5(password)) == 1) {
+                if(!password1.equals(password2)){
+                    out.print("<html>" +
+                            "<body>" +
+                            "<script type=\'text/javascript\' language=\'javascript\'>\n" +
+                            "           alert(\'两次密码不一致！！！\');\n" +
+                            "           window.document.location.href=\'update.jsp\';\n" +
+                            "</script>" +
+                            "</body>");
+                }
+                else{
+                    connectMysql.updateManage(username,connectMysql.MD5(password1));
+                    session.invalidate();
+                    out.print("<html>" +
+                            "<body>" +
+                            "<script type=\'text/javascript\' language=\'javascript\'>\n" +
+                            "           alert(\'修改成功！！！\');\n" +
+                            "           window.document.location.href=\'index.jsp\';\n" +
+                            "</script>" +
+                            "</body>");
+                }
+            } else {
                 out.print("<html>" +
                         "<body>" +
                         "<script type=\'text/javascript\' language=\'javascript\'>\n" +
-                        "           alert(\'两次密码不一致！！！\');\n" +
+                        "           alert(\'原密码错误！！！\');\n" +
                         "           window.document.location.href=\'update.jsp\';\n" +
                         "</script>" +
                         "</body>");
             }
-            else{
-                connectMysql.updateManage(username,password1);
-                session.invalidate();
-                out.print("<html>" +
-                        "<body>" +
-                        "<script type=\'text/javascript\' language=\'javascript\'>\n" +
-                        "           alert(\'修改成功！！！\');\n" +
-                        "           window.document.location.href=\'index.jsp\';\n" +
-                        "</script>" +
-                        "</body>");
-            }
-        } else {
-            out.print("<html>" +
-                    "<body>" +
-                    "<script type=\'text/javascript\' language=\'javascript\'>\n" +
-                    "           alert(\'原密码错误！！！\');\n" +
-                    "           window.document.location.href=\'update.jsp\';\n" +
-                    "</script>" +
-                    "</body>");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
     }
 }

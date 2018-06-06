@@ -25,7 +25,7 @@ public class register extends HttpServlet {
         if(connectMysql.seek(user)==-1){
             if(password1!="" && password1.equals(password2)){
                 try{
-                    connectMysql.insert(user,password1);
+                    connectMysql.insert(user,connectMysql.MD5(password1));
                     out.print("<script type=\"text/javascript\" language=\\\"javascript\\\">\n" +
                             "                    alert(\"注册成功！！！\");\n" +
                             "                    window.document.location.href=\"index.jsp\";\n" +

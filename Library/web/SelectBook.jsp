@@ -59,7 +59,7 @@
     %>
     <div align="center">
         <h1 class="hh">图书信息</h1>
-        <table width="400" border="0" cellspacing="0" cellpadding="0">
+        <table width="400" border="1" cellspacing="0" cellpadding="0">
             <tr>
                 <td>
                     <h3>书名</h3>

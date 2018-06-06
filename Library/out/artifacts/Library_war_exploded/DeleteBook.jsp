@@ -1,5 +1,7 @@
 <%@ page import="controller.connectMysql" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=gb2312" pageEncoding="utf-8" language="java" %>
+<%@page import="controller.connectMysql,model.book" %>
+<%request.setCharacterEncoding("gb2312");%>
 <html>
 <head>
     <title>Title</title>
@@ -46,13 +48,28 @@
             </tr><br>
         </table>
     </div>
-
     <%
         String book= request.getParameter("book");
         connectMysql.init();
-        if(book!="")
+        if(book!="" && book!=null){
             connectMysql.deleteBook(book);
     %>
+    <div align="center">
+        <h3>删除书籍成功</h3>
+        <table width="400" border="1" cellspacing="0" cellpadding="0">
+
+                <td>
+                    <h3>书名</h3>
+                </td>
+
+
+                <td>
+                    <%=book%>
+                </td>
+
+        </table>
+    </div>
+    <%}%>
 </form>
 </body>
 </html>

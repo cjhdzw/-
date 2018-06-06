@@ -3,8 +3,12 @@ package controller;
 import model.book;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class connectMysql {
     //mysql驱动包名
@@ -37,7 +41,7 @@ public class connectMysql {
             PreparedStatement ps = connection.prepareStatement(sql);
             //结果集
             ps.setString(1,username);
-            ps.setString(2,password);
+            ps.setString(2,connectMysql.MD5(password));
             int num = ps.executeUpdate();
             ps.close();
         } catch (Exception e) {
@@ -72,11 +76,13 @@ public class connectMysql {
             if(user.equals(""))
                 return -1;//不存在该用户
             else {
-                if (pass.equals(password))
+                if (pass.equals(connectMysql.MD5(password)))
                     return 1;//密码正确
                 else return -2;//密码错误
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return 0;
@@ -100,11 +106,13 @@ public class connectMysql {
             if(user.equals(""))
                 return -1;//不存在该用户
             else {
-                if (pass.equals(password))
+                if (pass.equals(connectMysql.MD5(password)))
                     return 1;//密码正确
                 else return -2;//密码错误
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return 0;
@@ -198,6 +206,12 @@ public class connectMysql {
         }
     }
 
+    public static String MD5(String str) throws NoSuchAlgorithmException {
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        md5.update(str.getBytes());
+        return new BigInteger(1, md5.digest()).toString();
+    }
+
     public static int seek(String username){
         try {
             String sql = "select username from userlist where username = ?";
@@ -227,11 +241,13 @@ public class connectMysql {
             String sql = "update userlist set password = ? where username = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             //结果集
-            ps.setString(1,newPassword);
+            ps.setString(1,connectMysql.MD5(newPassword));
             ps.setString(2,username);
             int num = ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }
@@ -241,11 +257,13 @@ public class connectMysql {
             String sql = "update manage set password = ? where username = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             //结果集
-            ps.setString(1,newPassword);
+            ps.setString(1,connectMysql.MD5(newPassword));
             ps.setString(2,username);
             int num = ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }
